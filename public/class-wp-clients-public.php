@@ -126,17 +126,18 @@ class Wp_Clients_Public {
 		$clients = $this->get_clients();
 		$odd = true;
 
-		foreach( $clients as $client ){ ?>
+		foreach( $clients as $client ){ 
+			$tax = wp_get_post_terms( $client->ID, 'client_type' ); ?>
 			
-			<div class="tile col6 <?php echo $odd ? '' : 'last' ;?>">
+			<div class="tile col6 <?php echo $odd ? '' : 'last' ;?>" data-animate="true">
 				<figure style="background-image: url('<?php echo get_the_post_thumbnail_url( $client->ID, 'hero-image-desktop' ); ?>');"></figure>
 				<div class="copy">
-					<span class="h3">Music</span>
-					<h2 class="tile-title"><?php echo get_the_title($client->ID);?></h2>
+					<span class="h3" data-animate="true"><?php echo $tax[0]->name;?></span>
+					<h2 class="tile-title" data-animate="true"><?php echo get_the_title($client->ID);?></h2>
 				</div>
 			</div>
 
-		<?php $odd ? $odd = false : true;}
+		<?php $odd = $odd ? false : true;}
 
 	}
 
