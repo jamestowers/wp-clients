@@ -135,7 +135,7 @@ class Wp_Clients_Admin {
 	{
 	  register_taxonomy(
 	    'client_type',
-	    array('clients'),
+	    array('clients', 'post'),
 	    array(
 	      'label' => __( 'Client Type' ),
 	      'rewrite' => array( 'slug' => 'client_type' ),
