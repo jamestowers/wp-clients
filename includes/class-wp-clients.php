@@ -155,6 +155,7 @@ class Wp_Clients {
 		//$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 		$this->loader->add_action( 'init', $plugin_admin, 'create_post_types' );
 		$this->loader->add_action( 'init', $plugin_admin, 'create_taxonomies' );
+		$this->loader->add_action( 'load-post.php', $plugin_admin, 'post_meta_boxes_setup' );
 	}
 
 	/**

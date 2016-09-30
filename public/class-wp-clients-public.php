@@ -112,42 +112,101 @@ class Wp_Clients_Public {
 	}
 
 	public function get_clients() {
-		
+
 		$args = array(
-			'post_type' => 'clients'
-			);
+			'post_type' => 'clients',
+	    'meta_query' => array(
+	    	'relation' => 'OR',
+        array(
+          'key' => $this->plugin_name . '_featured_client',
+          'compare' => 'NOT EXISTS' 
+          ),
+        array(
+          'key' => $this->plugin_name . '_featured_client',
+          'compare' => 'EXISTS' 
+          )
+      ),
+      'orderby' => 'meta_value',
+      'order' => 'DESC',
+	    'post_per_page' => -1
+		);
 
-		return get_posts( $args );
+		$query = new WP_Query($args);
 
+		return $query->posts;
+
+	}
+
+	public function get_featured_clients() {
+
+		$args = array(
+			'post_type' => 'clients',
+			'meta_key' => $this->plugin_name . '_featured_client',
+      'orderby' => 'title',
+      'order' => 'DESC',
+	    'post_per_page' => -1
+		);
+
+		$query = new WP_Query($args);
+
+		return $query->posts;
+	}
+
+	public function get_non_featured_clients() {
+
+		$args = array(
+			'post_type' => 'clients',
+			'meta_query' => array(
+        array(
+          'key' => $this->plugin_name . '_featured_client',
+          'compare' => 'NOT EXISTS' 
+          )
+      ),
+      'orderby' => 'title',
+      'order' => 'DESC',
+	    'post_per_page' => -1
+		);
+
+		$query = new WP_Query($args);
+
+		return $query->posts;
 	}
 
 	public function render_clients_tiles() {
 		
-		$clients = $this->get_clients();
-		$odd = true;
+		$featured = $this->get_featured_clients();
+		$non_featured = $this->get_non_featured_clients();
 
-		foreach( $clients as $client ){ 
+		echo '<div class="featured-clients tiles group"><ul>';
+		$odd = false;
+		foreach( $featured as $client ){ 
 			$tax = wp_get_post_terms( $client->ID, 'client_type' ); ?>
-			
-			<div class="tile col6 <?php echo $odd ? '' : 'last' ;?>" data-animate="true">
-				<figure>
-					<?php
-					$attachment_id = get_post_thumbnail_id( $client->ID );
-					$img_src = wp_get_attachment_image_url( $attachment_id, 'medium' );
-					$img_srcset = wp_get_attachment_image_srcset( $attachment_id, 'medium' );
-					?>
-					<img src="<?php echo esc_url( $img_src ); ?>"
-					     srcset="<?php echo esc_attr( $img_srcset ); ?>"
-					     sizes="(max-width: 768px) 100vw, 50vw" alt="<?php echo get_the_title($client->ID);?>">
-				</figure>
-				<div class="copy">
-					<span class="h3" data-animate="true"><?php echo $tax[0]->name;?></span>
-					<h2 class="tile-title" data-animate="true"><?php echo get_the_title($client->ID);?></h2>
-				</div>
-			</div>
+			<li class="tile col6 featured <?php echo $odd ? 'last' : '';?>" data-animate="moveup">
+					<figure>
+						<?php
+						$attachment_id = get_post_thumbnail_id( $client->ID );
+						$img_src = wp_get_attachment_image_url( $attachment_id, 'medium' );
+						$img_srcset = wp_get_attachment_image_srcset( $attachment_id, 'medium' );
+						?>
+						<img src="<?php echo esc_url( $img_src ); ?>"
+						     srcset="<?php echo esc_attr( $img_srcset ); ?>"
+						     sizes="(max-width: 768px) 100vw, 50vw" alt="<?php echo get_the_title($client->ID);?>">
+					</figure>
+					<div class="copy">
+						<span class="h3" data-animate="true"><?php echo $tax[0]->name;?></span>
+						<h2 class="tile-title" data-animate="true"><?php echo get_the_title($client->ID);?></h2>
+					</div>
+				</li>
+			<?php $odd = $odd ? false : true;
+		}
+		echo '</ul></div>';
 
-		<?php $odd = $odd ? false : true;}
-
+		echo '<div class="tiles group"><ul>';
+			echo '<h3>And</h3>';
+			foreach( $non_featured as $client ){ 
+				echo '<li><h2>' . get_the_title($client->ID) . '</h2></li>';
+			}
+		echo '</ul></div>';
 	}
 
 }
