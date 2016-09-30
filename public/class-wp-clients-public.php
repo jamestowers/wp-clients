@@ -130,7 +130,16 @@ class Wp_Clients_Public {
 			$tax = wp_get_post_terms( $client->ID, 'client_type' ); ?>
 			
 			<div class="tile col6 <?php echo $odd ? '' : 'last' ;?>" data-animate="true">
-				<figure style="background-image: url('<?php echo get_the_post_thumbnail_url( $client->ID, 'hero-image-desktop' ); ?>');"></figure>
+				<figure>
+					<?php
+					$attachment_id = get_post_thumbnail_id( $client->ID );
+					$img_src = wp_get_attachment_image_url( $attachment_id, 'medium' );
+					$img_srcset = wp_get_attachment_image_srcset( $attachment_id, 'medium' );
+					?>
+					<img src="<?php echo esc_url( $img_src ); ?>"
+					     srcset="<?php echo esc_attr( $img_srcset ); ?>"
+					     sizes="(max-width: 768px) 100vw, 50vw" alt="<?php echo get_the_title($client->ID);?>">
+				</figure>
 				<div class="copy">
 					<span class="h3" data-animate="true"><?php echo $tax[0]->name;?></span>
 					<h2 class="tile-title" data-animate="true"><?php echo get_the_title($client->ID);?></h2>
