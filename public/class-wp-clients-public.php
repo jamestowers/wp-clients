@@ -181,7 +181,7 @@ class Wp_Clients_Public {
 		$clients = $this->get_clients();
 
 		echo '<div class="tiles group"><ul>';
-		$odd = false;
+		//$odd = false;
 		$current_is_featured = '1';
 		foreach( $clients as $client ){ 
 			$is_featured = get_post_meta( $client->ID, $this->plugin_name . '_featured_client', true);
@@ -191,7 +191,7 @@ class Wp_Clients_Public {
 				echo '<br />';
 			} ?>
 			
-			<li class="tile <?php echo $is_featured ? 'featured' : '';?> <?php echo $odd ? 'last' : '';?>" data-animate="moveup">
+			<li class="tile <?php echo $is_featured ? 'featured' : '';?> <?php //echo $odd ? 'last' : '';?>" data-animate="moveup">
 				<figure>
 					<?php
 					$attachment_id = get_post_thumbnail_id( $client->ID );
@@ -208,7 +208,7 @@ class Wp_Clients_Public {
 				</div>
 			</li>
 			<?php $current_is_featured = $is_featured;?>
-			<?php $odd = $odd ? false : true;
+			<?php //$odd = $odd ? false : true;
 		}
 		echo '</ul></div>';
 
