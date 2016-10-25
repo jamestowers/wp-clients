@@ -191,7 +191,7 @@ class Wp_Clients_Public {
 				echo '<br />';
 			} ?>
 			
-			<li class="tile col6 <?php echo $is_featured ? 'featured' : '';?> <?php echo $odd ? 'last' : '';?>" data-animate="moveup">
+			<li class="tile <?php echo $is_featured ? 'featured' : '';?> <?php echo $odd ? 'last' : '';?>" data-animate="moveup">
 				<figure>
 					<?php
 					$attachment_id = get_post_thumbnail_id( $client->ID );
